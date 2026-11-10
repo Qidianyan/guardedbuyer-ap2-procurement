@@ -1,0 +1,4 @@
+config,label,attack_cases,attack_cases_blocked,attack_case_block_rate,unauthorized_attempts,attempts_blocked,attempt_block_rate,normal_cases,normal_false_blocks,normal_false_block_rate,legit_purchases_all,legit_not_paid_all,false_block_rate_all,mismatch_cases,mismatch_handled,dispute_coverage,errors,audit_chain_valid_all
+no_guardrails,No guardrails,96,0,0.0,102,0,0.0,74,0,0.0,200,0,0.0,30,0,0.0,0,True
+policy_only,Policy only,96,60,0.625,102,66,0.6471,74,0,0.0,200,0,0.0,30,0,0.0,0,True
+full,Full guardrails (ours),96,91,0.9479,102,97,0.951,74,0,0.0,200,0,0.0,30,30,1.0,0,True

@@ -1,0 +1,7 @@
+# Optional: run PayPal through the official PayPal Agent Toolkit (Python).
+# The wheel pins langchain / crewai-tools / openai-agents for framework adapters we do not use, so install with:
+#   pip install --no-deps paypal-agent-toolkit==1.11.0 && pip install -r requirements-toolkit.txt
+pydantic>=2.10
+requests>=2.31
+httpx>=0.26
+python-dotenv>=1.0

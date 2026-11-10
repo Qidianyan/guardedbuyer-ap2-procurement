@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Evaluation explorer · GuardedBuyer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23003087'/%3E%3Cpath d='M16 5l8 3.4v6c0 5-3.4 9-8 10.6C11.4 23.4 8 19.4 8 14.4v-6L16 5z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/approvals.css">
+<link rel="stylesheet" href="/static/evaluation.css">
+</head>
+<body class="desk">
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"><svg class="icon"><use href="/static/icons/lucide-sprite.svg#lucide-scale"></use></svg></div>
+      <div><div class="brand-name">GuardedBuyer · Evaluation explorer</div>
+        <div class="brand-sub">200 synthetic purchase requests, each run with no guardrails, a spend policy, and full guardrails.</div></div>
+    </div>
+    <div class="status-chips">
+      <span class="chip"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-hash"></use></svg><span id="seed-chip">Seed</span></span>
+      <a class="btn btn-ghost btn-sm" href="/approvals"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-inbox"></use></svg>Approval desk</a>
+      <a class="btn btn-ghost btn-sm" href="/"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-arrow-right"></use></svg>Dashboard</a>
+    </div>
+  </div>
+</header>
+<main class="eval">
+  <section class="eval-cards" id="cards" aria-label="Summary by configuration"></section>
+  <section class="panel eval-grid-panel">
+    <div class="eval-toolbar">
+      <h2 class="eval-h2"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-list-checks"></use></svg>Every request, every configuration</h2>
+      <div class="seg" role="group" aria-label="Filter by request type" id="type-filter">
+        <button type="button" data-type="" aria-pressed="true">All</button>
+        <button type="button" data-type="attack" aria-pressed="false">Attacks</button>
+        <button type="button" data-type="normal" aria-pressed="false">Normal</button>
+        <button type="button" data-type="mismatch" aria-pressed="false">Delivery mismatch</button>
+        <button type="button" data-type="missed" aria-pressed="false">Missed by full</button>
+      </div>
+      <input class="eval-search" id="search" type="search" placeholder="Search id, task, listing" aria-label="Search requests">
+    </div>
+    <div id="grid" class="eval-grid" role="region" aria-label="Case table"></div>
+    <p class="eval-foot">All requests are synthetic (metrics/cases.py, profile 200). Table built with AG Grid Community (MIT). Numbers come from metrics/results_200.json; re-run <code>python3 metrics/run_metrics.py --cases metrics/cases_200.json</code> to regenerate.</p>
+  </section>
+</main>
+<script src="/static/vendor/ag-grid/ag-grid-community.min.js"></script>
+<script src="/static/evaluation.js"></script>
+</body>
+</html>

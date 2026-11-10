@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Approval desk · GuardedBuyer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23003087'/%3E%3Cpath d='M16 5l8 3.4v6c0 5-3.4 9-8 10.6C11.4 23.4 8 19.4 8 14.4v-6L16 5z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M12 15l2.5 2.5L20 12' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/approvals.css">
+</head>
+<body class="desk">
+<a class="skip-link" href="#detail">Skip to the selected request</a>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"><svg class="icon"><use href="/static/icons/lucide-sprite.svg#lucide-shield-check"></use></svg></div>
+      <div><div class="brand-name">GuardedBuyer · Approval desk</div>
+        <div class="brand-sub">Blocked purchases wait here for a human. Approvals become a signed AP2 mandate.</div></div>
+    </div>
+    <div class="status-chips">
+      <span class="chip" id="mode-chip"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-wallet"></use></svg><span>PayPal</span></span>
+      <span class="chip" id="chain-chip"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-link"></use></svg><span>Audit chain</span></span>
+      <a class="btn btn-ghost btn-sm" href="/evaluation"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-scale"></use></svg>Evaluation</a>
+      <a class="btn btn-ghost btn-sm" href="/"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-arrow-right"></use></svg>Dashboard</a>
+      <button class="btn btn-secondary btn-sm" id="load-demo" type="button"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-play"></use></svg>Load demo request</button>
+    </div>
+  </div>
+</header>
+<div class="desk-layout">
+  <nav class="queue" aria-label="Approval queue">
+    <h2 class="queue-title"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-inbox"></use></svg>Queue</h2>
+    <ul id="queue-list" class="queue-list"></ul>
+    <p class="queue-empty" id="queue-empty">No requests need approval. Use “Load demo request” to create the over-budget laptop request.</p>
+  </nav>
+  <main id="detail" class="detail" tabindex="-1" aria-live="polite"></main>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="/static/approvals.js"></script>
+</body>
+</html>

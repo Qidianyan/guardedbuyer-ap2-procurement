@@ -1,0 +1,16 @@
+{
+ "note": "IDs read from the recorded page (real PayPal sandbox when --sandbox)",
+ "at_order": {
+  "order_id": "1S38017531849904R",
+  "order_status": "PAYER_ACTION_REQUIRED",
+  "capture_id": "not captured yet",
+  "amount": "$2,200.00 USD"
+ },
+ "at_capture": {
+  "order_id": "1S38017531849904R",
+  "order_status": "COMPLETED",
+  "capture_id": "8T206088RF006424G",
+  "amount": "$2,200.00 USD"
+ },
+ "mismatch_item": "Purchase requestREQ-4946f4fcemployeeBlack toner cartridge 26ARequester danaDept opsQty 4Merchant InkWorldUnit $55.00SKU TONER-BK-26ARequest total$220.00USDDispu"
+}

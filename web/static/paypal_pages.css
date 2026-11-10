@@ -1,0 +1,343 @@
+/* Styles for the server-rendered simulated PayPal pages:
+ * /mock-paypal/checkoutnow, /paypal/return, /paypal/cancel.
+ * No external resources. The amber SIMULATED banner stays prominent on checkout.
+ */
+
+:root {
+  --pp-blue: #003087;
+  --pp-blue-bright: #0070e0;
+  --pp-blue-soft: #eef6ff;
+  --pp-ink: #13263e;
+  --pp-muted: #62748a;
+  --pp-border: #e0e8f2;
+  --pp-green: #0d7a45;
+  --pp-red: #c22a2a;
+  --pp-gold: #ffc439;
+  --pp-gold-deep: #e9ad26;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 34px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--pp-ink);
+  background:
+    radial-gradient(900px 400px at 50% -8%, #e6f1ff 0%, rgba(230, 241, 255, 0) 62%),
+    #f3f7fb;
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, p { margin: 0; }
+svg { display: block; }
+a { color: var(--pp-blue-bright); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --------------------------------------------------------------- simulated banner */
+
+.sim-banner {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 16px;
+  padding: 13px 16px 13px 48px;
+  border: 2px solid #e3a72c;
+  border-radius: 12px;
+  background: #fff3d4;
+  color: #674000;
+  font-size: 12.5px;
+  font-weight: 720;
+  line-height: 1.45;
+  letter-spacing: 0.005em;
+  box-shadow: 0 8px 22px rgba(151, 101, 8, 0.12);
+}
+
+.sim-banner::before {
+  content: "!";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  width: 23px;
+  height: 23px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #d28b0d;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.sim-banner b { color: #5b3400; }
+
+/* ---------------------------------------------------------------------- pp card */
+
+.pp-card {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  padding: 30px 32px 28px;
+  border: 1px solid var(--pp-border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(16, 42, 80, 0.04),
+    0 22px 55px rgba(16, 42, 80, 0.09);
+  overflow: hidden;
+}
+
+.pp-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--pp-blue) 0%, var(--pp-blue-bright) 58%, #63b1f4 100%);
+}
+
+.pp-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
+  color: var(--pp-blue);
+  font-size: 25px;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.pp-logo::before {
+  content: "P";
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: linear-gradient(145deg, var(--pp-blue) 6%, var(--pp-blue-bright) 92%);
+  color: #fff;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  box-shadow: 0 6px 14px rgba(0, 48, 135, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.pp-logo span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 21px;
+  padding: 2px 8px;
+  border: 1px solid #dbe8f5;
+  border-radius: 999px;
+  background: #f3f8fd;
+  color: #60748b;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 750;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.pp-card h1 {
+  margin: 17px 0 8px;
+  color: #0e2138;
+  font-size: 24px;
+  font-weight: 770;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+
+.pp-card > .muted:first-of-type {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.muted { color: var(--pp-muted); }
+.small { font-size: 11px; }
+.ok { color: var(--pp-green); font-weight: 650; }
+.bad { color: var(--pp-red); font-weight: 650; }
+
+.kv {
+  width: 100%;
+  margin: 15px 0 18px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.kv td {
+  padding: 9px 0;
+  border-bottom: 1px solid #edf2f8;
+  vertical-align: top;
+  color: #2e455e;
+  overflow-wrap: anywhere;
+}
+
+.kv td:first-child {
+  width: 35%;
+  padding-right: 18px;
+  padding-top: 11px;
+  color: #73849a;
+  font-size: 9.5px;
+  font-weight: 760;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.kv tr:last-child td { border-bottom: 0; }
+
+.kv .big {
+  display: inline-block;
+  color: var(--pp-blue);
+  font-size: 28px;
+  font-weight: 820;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+code {
+  padding: 1px 5px;
+  border: 1px solid #e7eef6;
+  border-radius: 4px;
+  background: #f6f9fd;
+  color: #31506f;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------------- buttons */
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 45px;
+  margin-top: 9px;
+  padding: 11px 18px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--font);
+  font-size: 13.5px;
+  font-weight: 720;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+.btn:hover { text-decoration: none; }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+
+.btn.pay {
+  border-color: var(--pp-gold-deep);
+  background: linear-gradient(180deg, #ffd25c 0%, var(--pp-gold) 58%, #f5ba2f 100%);
+  color: #003087;
+  box-shadow: 0 2px 3px rgba(166, 113, 5, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.btn.pay:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffcb48 0%, #f6bb2f 100%);
+}
+
+.btn.pay:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn.ghost {
+  margin-top: 7px;
+  border-color: #cfdcea;
+  background: #fff;
+  color: #35516d;
+  font-weight: 650;
+  box-shadow: 0 1px 2px rgba(16, 42, 80, 0.04);
+}
+
+.btn.ghost:hover {
+  border-color: #aec3da;
+  background: #f9fcff;
+}
+
+.btn:not(.pay):not(.ghost) {
+  margin-top: 14px;
+  background: linear-gradient(180deg, #0a7aea 0%, #0070e0 72%, #0068d2 100%);
+  border-color: #0064ca;
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 48, 135, 0.18);
+}
+
+.btn:not(.pay):not(.ghost):hover { background: linear-gradient(180deg, #0a72dc 0%, #0064cd 100%); }
+
+.pp-card > .muted.small:last-child {
+  margin-top: 14px;
+  padding-top: 11px;
+  border-top: 1px dashed #e6edf6;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: #77889d;
+}
+
+.pp-card > .muted.small:last-child code { font-size: 9.5px; }
+
+/* Return page status line sits right under the heading. */
+.pp-card > p.ok,
+.pp-card > p.bad {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 2px 0 4px;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.pp-card > p.ok { background: #eefaf4; border: 1px solid #c6ead7; }
+.pp-card > p.bad { background: #fdf0f0; border: 1px solid #f1c9c9; }
+
+@media (max-width: 640px) {
+  body { padding: 18px 12px 34px; }
+  .pp-card { padding: 24px 19px 22px; border-radius: 14px; }
+  .pp-card h1 { font-size: 21px; }
+  .sim-banner { padding: 11px 13px 11px 42px; font-size: 11.5px; }
+  .sim-banner::before { left: 11px; width: 21px; height: 21px; font-size: 13px; }
+  .kv td:first-child { width: 38%; font-size: 9px; }
+  .kv .big { font-size: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

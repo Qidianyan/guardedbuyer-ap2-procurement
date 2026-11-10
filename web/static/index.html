@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>GuardedBuyer — AP2-guarded procurement</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23003087'/%3E%3Cpath d='M16 5l8 3.4v6c0 5-3.4 9-8 10.6C11.4 23.4 8 19.4 8 14.4v-6L16 5z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M12 15l2.5 2.5L20 12' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="icon-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path d="M12 3l7 3v5.2c0 4.5-3 8.1-7 9.8-4-1.7-7-5.3-7-9.8V6l7-3z"></path>
+      <path d="M9 12.2l2.1 2.1 4.2-4.4"></path>
+    </symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24">
+      <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"></path>
+      <path d="M18.8 14.8l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7.7-1.9z"></path>
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24">
+      <path d="M8 5.5l11 6.5-11 6.5v-13z"></path>
+    </symbol>
+    <symbol id="i-history" viewBox="0 0 24 24">
+      <path d="M3 12a9 9 0 1 0 2.7-6.4"></path>
+      <path d="M3 4.5V10h5.5"></path>
+      <path d="M12 7.5V12l3 1.8"></path>
+    </symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24">
+      <path d="M20 11a8 8 0 1 0-2.3 6.3"></path>
+      <path d="M20 4.5V11h-6.5"></path>
+    </symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24">
+      <path d="M12 3.5L21 19.5H3L12 3.5z"></path>
+      <path d="M12 9.5v4.2"></path>
+      <path d="M12 17.1h.01"></path>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M8.3 12.4l2.5 2.5 4.9-5.2"></path>
+    </symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M9 9l6 6M15 9l-6 6"></path>
+    </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24">
+      <rect x="4.5" y="10" width="15" height="10.5" rx="2"></rect>
+      <path d="M8 10V7.2a4 4 0 0 1 8 0V10"></path>
+      <path d="M12 14.2v2.3"></path>
+    </symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24">
+      <rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"></rect>
+      <path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"></path>
+    </symbol>
+    <symbol id="i-external" viewBox="0 0 24 24">
+      <path d="M13.5 4H20v6.5"></path>
+      <path d="M10 14L20 4"></path>
+      <path d="M20 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5"></path>
+    </symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24">
+      <path d="M9 5l7 7-7 7"></path>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24">
+      <path d="M4 12h15"></path>
+      <path d="M13 6l6 6-6 6"></path>
+    </symbol>
+    <symbol id="i-card" viewBox="0 0 24 24">
+      <rect x="2.5" y="5" width="19" height="14" rx="2.5"></rect>
+      <path d="M2.5 10h19"></path>
+      <path d="M6.5 15h4"></path>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24">
+      <circle cx="9" cy="8" r="3.2"></circle>
+      <path d="M3.2 19.5c0-3 2.6-5.1 5.8-5.1s5.8 2.1 5.8 5.1"></path>
+      <path d="M16.2 5.3a3 3 0 0 1 0 5.6"></path>
+      <path d="M17.6 14.7c2 .5 3.4 2.1 3.4 4.3"></path>
+    </symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24">
+      <path d="M6 3.5h12V21l-3-2-3 2-3-2-3 2V3.5z"></path>
+      <path d="M9 8.2h6M9 12.2h6"></path>
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24">
+      <path d="M20.5 11.5a8 8 0 0 1-8 8H4.5l1.8-3.1A8 8 0 1 1 20.5 11.5z"></path>
+      <path d="M8.5 10.5h7M8.5 14h4.5"></path>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.5"></circle>
+      <path d="M12 7.5V12l3 1.8"></path>
+    </symbol>
+    <symbol id="i-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.5"></circle>
+      <path d="M12 10.8v5.3"></path>
+      <path d="M12 7.6h.01"></path>
+    </symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24">
+      <path d="M5.5 21V4"></path>
+      <path d="M5.5 5c4.2-3 7.8 2.7 13 0v8.5c-5.2 2.7-8.8-3-13 0"></path>
+    </symbol>
+    <symbol id="i-box" viewBox="0 0 24 24">
+      <path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"></path>
+      <path d="M3 8l9 5 9-5"></path>
+      <path d="M12 13v8"></path>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24">
+      <circle cx="10.5" cy="10.5" r="6.2"></circle>
+      <path d="M15.2 15.2L21 21"></path>
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24">
+      <path d="M12 3.5v11"></path>
+      <path d="M7.5 10.5L12 15l4.5-4.5"></path>
+      <path d="M4 17.5v1.8A1.7 1.7 0 0 0 5.7 21h12.6a1.7 1.7 0 0 0 1.7-1.7v-1.8"></path>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg class="icon" viewBox="0 0 24 24"><use href="#i-shield"></use></svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">GuardedBuyer</div>
+        <div class="brand-sub">AP2-guarded procurement agent for small businesses · PayPal</div>
+      </div>
+    </div>
+    <nav class="top-links" aria-label="Pages"><a href="/approvals">Approval desk</a><a href="/evaluation">Evaluation (200 cases)</a></nav>
+    <div class="status-chips" id="status-chips" aria-label="System status">
+      <span class="chip chip-muted"><span class="spinner spinner-xs"></span> Connecting to demo server…</span>
+    </div>
+  </div>
+</header>
+
+<main class="app" id="app">
+  <aside class="rail" aria-label="Controls and policy">
+    <section class="card" id="request-form">
+      <div class="card-head">
+        <div class="card-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><use href="#i-sparkles"></use></svg></div>
+        <div class="card-title-wrap">
+          <h2>New purchase request</h2>
+          <p>Plain English in. A guarded purchase out.</p>
+        </div>
+      </div>
+      <form class="card-body request-form" id="request-form-el" autocomplete="off">
+        <div class="field-row">
+          <label class="field">
+            <span>Requester</span>
+            <input type="text" id="req-requester" name="requester" value="dana" spellcheck="false">
+          </label>
+          <label class="field">
+            <span>Department</span>
+            <select id="req-department" name="department">
+              <option value="ops">ops</option>
+              <option value="it">it</option>
+            </select>
+          </label>
+        </div>
+        <label class="field">
+          <span>What do you need?</span>
+          <textarea id="req-text" name="text" rows="3" placeholder="e.g. We need 10 boxes of A4 paper for the office"></textarea>
+        </label>
+        <div class="examples" aria-label="Example requests">
+          <button type="button" class="example" data-text="We need 10 boxes of A4 paper for the office" data-dept="ops">
+            <span>We need 10 boxes of A4 paper for the office</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+          </button>
+          <button type="button" class="example" data-text="Buy 2 laptops for the new engineers" data-dept="it">
+            <span>Buy 2 laptops for the new engineers</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+          </button>
+          <button type="button" class="example" data-text="Order 4 black toner cartridges" data-dept="ops">
+            <span>Order 4 black toner cartridges</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+          </button>
+          <button type="button" class="example" data-text="Please buy 5 USB-C hubs for the new hires" data-dept="ops">
+            <span>Please buy 5 USB-C hubs for the new hires</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+          </button>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="ask-btn">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sparkles"></use></svg>
+          Ask the agent
+        </button>
+        <p class="hint">The agent parses the request, compares quotes and checks policy. A human approves spend.</p>
+      </form>
+    </section>
+
+    <section class="card" id="replay">
+      <div class="card-head">
+        <div class="card-icon card-icon-warm" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><use href="#i-play"></use></svg></div>
+        <div class="card-title-wrap">
+          <h2>Replay scenarios</h2>
+          <p>Deterministic, offline demo runs.</p>
+        </div>
+        <button type="button" class="btn btn-ghost btn-xs" id="reset-btn" title="Reset all demo state">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh"></use></svg>
+          Reset
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="replay-list" id="scenario-buttons">
+          <button type="button" class="scenario-btn" data-scenario="agent_loop">
+            <span class="scenario-num">0</span><span class="scenario-label">Agent loop</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"></use></svg>
+          </button>
+          <button type="button" class="scenario-btn" data-scenario="normal">
+            <span class="scenario-num">1</span><span class="scenario-label">Normal purchase</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"></use></svg>
+          </button>
+          <button type="button" class="scenario-btn" data-scenario="over_budget">
+            <span class="scenario-num">2</span><span class="scenario-label">Over budget + approvals</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"></use></svg>
+          </button>
+          <button type="button" class="scenario-btn" data-scenario="mismatch">
+            <span class="scenario-num">3</span><span class="scenario-label">Delivery mismatch → dispute</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"></use></svg>
+          </button>
+          <button type="button" class="scenario-btn" data-scenario="red_team">
+            <span class="scenario-num">4</span><span class="scenario-label">Red team (prompt injection)</span>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chevron"></use></svg>
+          </button>
+        </div>
+        <button type="button" class="btn btn-primary btn-block replay-all" id="replay-all">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"></use></svg>
+          Replay all four (fresh state)
+        </button>
+        <div id="last-replay" class="last-replay">
+          <p class="hint">No scenario has been run yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="policy-card">
+      <div class="card-head">
+        <div class="card-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><use href="#i-shield"></use></svg></div>
+        <div class="card-title-wrap">
+          <h2>Company policy</h2>
+          <p>Budgets and human approval thresholds.</p>
+        </div>
+      </div>
+      <div class="card-body" id="policy-body">
+        <div class="empty empty-compact"><span class="spinner"></span><p>Loading policy…</p></div>
+      </div>
+    </section>
+  </aside>
+
+  <div class="main">
+    <section class="card requests-card" id="requests">
+      <div class="card-head">
+        <div class="card-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><use href="#i-receipt"></use></svg></div>
+        <div class="card-title-wrap">
+          <h2>Requests</h2>
+          <p id="requests-meta">Loading requests…</p>
+        </div>
+        <span class="count-badge" id="requests-count">—</span>
+      </div>
+      <div class="requests-list" id="requests-list" aria-live="polite">
+        <div class="empty empty-compact"><span class="spinner"></span><p>Loading requests…</p></div>
+      </div>
+    </section>
+
+    <section class="detail-wrap" id="detail" aria-live="polite" aria-label="Request detail">
+      <div class="card"><div class="empty"><span class="spinner spinner-lg"></span><p>Loading request detail…</p></div></div>
+    </section>
+
+    <section class="card trace-card" id="trace">
+      <div class="card-head">
+        <div class="card-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><use href="#i-history"></use></svg></div>
+        <div class="card-title-wrap">
+          <h2>Agent trace</h2>
+          <p id="trace-meta">Tool calls, results and guardrail refusals.</p>
+        </div>
+      </div>
+      <div class="card-body" id="trace-body">
+        <div class="empty empty-compact"><span class="spinner"></span><p>Loading traces…</p></div>
+      </div>
+    </section>
+
+    <section class="card audit-card" id="audit">
+      <div class="card-head audit-head">
+        <div class="card-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24"><use href="#i-lock"></use></svg></div>
+        <div class="card-title-wrap">
+          <h2>Audit log</h2>
+          <p>Hash-chained, append-only. Newest first.</p>
+        </div>
+        <div class="audit-head-actions">
+          <button type="button" class="btn btn-secondary btn-sm" id="verify-btn">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check-circle"></use></svg>
+            Verify hash chain
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="tamper-btn">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-alert"></use></svg>
+            Tamper test
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="audit-toolbar">
+          <div class="filter-pills" id="audit-filters" role="group" aria-label="Audit filters"></div>
+          <span class="audit-count" id="audit-count"></span>
+        </div>
+        <div id="audit-result" class="audit-result" hidden></div>
+        <div class="audit-scroll" id="audit-table-wrap">
+          <div class="empty empty-compact"><span class="spinner"></span><p>Loading audit entries…</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="/static/app.js" defer></script>
+</body>
+</html>

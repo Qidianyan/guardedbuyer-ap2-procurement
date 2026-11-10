@@ -1,0 +1,13 @@
+__pycache__/
+out/
+.venv/
+.env
+*.env
+!.env.example
+.dsh-runs/
+.tasks/ref/
+*.jsonl
+.tasks/*/sample_*.json
+.secrets
+
+materials/*.mp4

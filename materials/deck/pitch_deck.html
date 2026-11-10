@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>GuardedBuyer pitch deck</title>
+<style>
+@page { size: 1600px 900px; margin: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Noto Sans", Arial, sans-serif; color: #122238; }
+.s { width: 1600px; height: 900px; padding: 72px 88px; position: relative; overflow: hidden; page-break-after: always; background: #f3f7fb; }
+.s.dark { background: #0b1f3f; color: #fff; }
+.k { font-size: 18px; letter-spacing: .14em; text-transform: uppercase; color: #0070e0; font-weight: 700; margin-bottom: 14px; }
+.dark .k { color: #9cc7ff; }
+h1 { font-size: 72px; line-height: 1.08; margin: 0 0 22px; }
+h2 { font-size: 46px; line-height: 1.15; margin: 0 0 28px; }
+p, li { font-size: 25px; line-height: 1.45; }
+.muted { color: #607089; } .dark .muted { color: #c9d8ee; }
+.foot { position: absolute; left: 88px; right: 88px; bottom: 34px; display: flex; justify-content: space-between; font-size: 15px; color: #8a99ad; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+.card { background: #fff; border: 1px solid #e1e9f3; border-radius: 18px; padding: 28px 30px; box-shadow: 0 10px 30px rgba(16,42,80,.06); }
+.card h3 { margin: 0 0 10px; font-size: 26px; } .card p { font-size: 21px; margin: 0; color: #2d405a; }
+.big { font-size: 86px; font-weight: 800; line-height: 1; } .big small { font-size: 30px; color: #607089; font-weight: 600; margin-left: 8px; }
+.ours { border-color: #c9e2ff; background: linear-gradient(180deg,#eaf3ff,#fff 70%); }
+.red { color: #c22a2a; } .green { color: #0d7a45; } .blue { color: #0070e0; }
+.shot { width: 100%; border-radius: 14px; border: 1px solid #cfdcea; box-shadow: 0 16px 40px rgba(16,42,80,.14); }
+.flow { display: flex; gap: 14px; align-items: stretch; margin-top: 20px; }
+.step { flex: 1; background: #fff; border: 1px solid #e1e9f3; border-radius: 14px; padding: 18px; font-size: 19px; line-height: 1.35; }
+.step b { display: block; font-size: 15px; color: #0070e0; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+.step.h { border-color: #f0d39a; background: #fff5df; }
+table { border-collapse: collapse; width: 100%; font-size: 22px; background: #fff; border-radius: 14px; overflow: hidden; }
+th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid #e1e9f3; } th { background: #f7fafd; font-size: 17px; color: #607089; text-transform: uppercase; letter-spacing: .06em; }
+code, .mono { font-family: "DejaVu Sans Mono", monospace; font-size: .9em; }
+.chips span { display: inline-block; border: 1px solid #3a5f95; border-radius: 999px; padding: 8px 18px; font-size: 20px; margin: 0 10px 12px 0; color: #dbe8fb; }
+.mark { width: 70px; height: 70px; border-radius: 18px; background: #0070e0; display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; margin-right: 18px; }
+ul { padding-left: 26px; margin: 0; } li { margin-bottom: 10px; }
+</style></head><body>
+
+<section class="s dark">
+  <div style="margin-top:120px"><span class="mark"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></span><span style="font-size:34px;font-weight:700;vertical-align:middle">GuardedBuyer</span></div>
+  <h1 style="margin-top:46px">Let AI do the buying,<br>without handing it the keys.</h1>
+  <p class="muted" style="font-size:28px;max-width:1150px">A buyer-side purchasing agent for small businesses: pays with PayPal, signs every release as an AP2 mandate, and claims money back when deliveries fall short.</p>
+  <div class="chips" style="margin-top:36px"><span>PayPal Orders v2 + Disputes v1</span><span>Real PayPal sandbox</span><span>AP2 Intent Mandates</span><span>LLM tool-calling agent</span><span>AG Grid evaluation</span></div>
+  <div class="foot"><span>PayPal AI Hackathon 2026</span><span>Open source (MIT) · © 2026 elidot · all demo data synthetic</span></div>
+</section>
+
+<section class="s">
+  <div class="k">The problem</div>
+  <h2>Agents can pay now. Small businesses can't afford what that unlocks.</h2>
+  <div class="cols3" style="margin-top:40px">
+    <div class="card"><h3 class="red">Overspending</h3><p>One office manager, one company card, a spreadsheet. Budgets and approval rules live in people's heads.</p></div>
+    <div class="card"><h3 class="red">Hijacked agents</h3><p>An agent with a payment tool follows text it reads. One "SYSTEM NOTICE" hidden in a supplier listing can redirect the money.</p></div>
+    <div class="card"><h3 class="red">Unclaimed shortfalls</h3><p>Three of four cartridges arrive, the invoice is paid in full, and nobody files the claim.</p></div>
+  </div>
+  <p class="muted" style="margin-top:44px">Most agentic-commerce tooling helps <b>merchants</b> get paid by agents. We built the <b>buyer's</b> side.</p>
+  <div class="foot"><span>GuardedBuyer</span><span>2</span></div>
+</section>
+
+<section class="s">
+  <div class="k">How it works</div>
+  <h2>LLM proposes. Code, people and PayPal dispose.</h2>
+  <div class="flow">
+    <div class="step"><b>1 · Ask</b>Employee writes a request in plain English</div>
+    <div class="step"><b>2 · AI</b>LLM picks the SKU, compares quotes, explains the choice</div>
+    <div class="step"><b>3 · Policy</b>Budgets, categories, merchants, hard cap, scope</div>
+    <div class="step h"><b>4 · Humans</b>Manager / finance approve on the desk</div>
+    <div class="step"><b>5 · AP2</b>Signed Intent Mandate pins merchant, SKU, qty, max $</div>
+    <div class="step"><b>6 · PayPal</b>Orders v2 order, buyer approval, read-back, capture</div>
+    <div class="step"><b>7 · Reconcile</b>Short delivery → Disputes v1 claim for the exact gap</div>
+  </div>
+  <div class="cols" style="margin-top:44px">
+    <div class="card"><h3>What the model can't do</h3><p>Approve · set a price · choose the charge amount · mint a mandate · call PayPal directly.</p></div>
+    <div class="card"><h3>What every step leaves behind</h3><p>A SHA-256 hash-chained audit entry, including every refused attempt, verifiable by anyone.</p></div>
+  </div>
+  <div class="foot"><span>GuardedBuyer</span><span>3</span></div>
+</section>
+
+<section class="s">
+  <div class="k">Product · approval desk</div>
+  <div class="cols" style="grid-template-columns: 1.55fr 1fr; align-items:start">
+    <img class="shot" style="height:740px;object-fit:cover;object-position:top" src="../../docs/screenshots/10_approval_desk_released.png" alt="Approval desk">
+    <div><h2 style="font-size:40px">A blocked purchase becomes a signed decision.</h2>
+      <ul><li>Why it was blocked: $2,200 vs $1,500 left; the agent's payment attempt refused</li>
+      <li>Chosen quote and the reason</li><li>Exact limits that will be signed, before anyone approves</li>
+      <li>Manager + finance approve with notes, or reject</li><li>Release → Ed25519-signed AP2 mandate → PayPal order</li></ul></div>
+  </div>
+  <div class="foot"><span>GuardedBuyer</span><span>4</span></div>
+</section>
+
+<section class="s">
+  <div class="k">Real PayPal sandbox · verified 2026-11-10</div>
+  <h2>The same flow, on PayPal's sandbox.</h2>
+  <table>
+    <tr><th>Step</th><th>PayPal call</th><th>Result</th></tr>
+    <tr><td>Create (idempotent)</td><td><code>POST /v2/checkout/orders</code> + PayPal-Request-Id</td><td class="green">PAYER_ACTION_REQUIRED · same order on retry</td></tr>
+    <tr><td>Capture too early</td><td><code>POST …/capture</code></td><td class="green">422 ORDER_NOT_APPROVED (expected)</td></tr>
+    <tr><td>Buyer approval</td><td>checkout link, or sandbox test card via <code>confirm-payment-source</code></td><td class="green">APPROVED</td></tr>
+    <tr><td>Read-back + mandate check</td><td><code>GET /v2/checkout/orders/{id}</code></td><td class="green">matches signed mandate</td></tr>
+    <tr><td>Capture, then capture again</td><td><code>POST …/capture</code> ×2</td><td class="green">COMPLETED · second returns the same capture</td></tr>
+    <tr><td>Dispute tracking</td><td><code>GET /v1/customer/disputes</code></td><td class="green">works (0 open)</td></tr>
+  </table>
+  <p class="muted" style="margin-top:22px">Approval desk run (shown in the demo video): sandbox order <span class="mono">1S38017531849904R</span> → capture <span class="mono">8T206088RF006424G</span>, USD 2,200.00, audit chain valid.</p>
+  <div class="foot"><span>GuardedBuyer · scripts/sandbox_smoke.py --test-card</span><span>5</span></div>
+</section>
+
+<section class="s">
+  <div class="k">Evidence · 200 synthetic requests, seed 20261110</div>
+  <h2>Full guardrails stop 91 of 96 attacks. Zero false blocks.</h2>
+  <div class="cols3">
+    <div class="card"><h3>No guardrails</h3><div class="big red">0/96</div><p style="margin-top:12px">attack cases stopped · 0/102 attempts</p></div>
+    <div class="card"><h3>Policy only</h3><div class="big">60/96<small>62.5%</small></div><p style="margin-top:12px">66/102 attempts · 0/30 mismatches claimed</p></div>
+    <div class="card ours"><h3 class="blue">Full guardrails (ours)</h3><div class="big blue">91/96<small>94.8%</small></div><p style="margin-top:12px">97/102 attempts · 30/30 mismatches handled</p></div>
+  </div>
+  <p style="margin-top:34px"><b>0/74</b> legitimate requests blocked in every configuration. The 5 misses share one pattern (an injection that only asks to buy the requested item from the attacker's store) and are listed in the AG Grid explorer and <code>docs/failure_cases.md</code>.</p>
+  <p class="muted" style="font-size:19px">Synthetic cases, scripted worst-case agent, offline PayPal emulation. Generated by <code>metrics/run_metrics.py</code>; denominators in <code>docs/comparison_200.md</code>.</p>
+  <div class="foot"><span>GuardedBuyer</span><span>6</span></div>
+</section>
+
+<section class="s">
+  <div class="k">Evaluation explorer · built with AG Grid</div>
+  <img class="shot" style="width:1240px;display:block;margin:0 auto" src="../../docs/screenshots/12_evaluation_explorer.png" alt="Evaluation explorer">
+  <div class="foot"><span>GuardedBuyer · /evaluation</span><span>7</span></div>
+</section>
+
+<section class="s">
+  <div class="k">Built during the submission period</div>
+  <div class="cols">
+    <div><h2 style="font-size:40px">Significant updates (Nov 2026)</h2>
+      <ul><li>Real PayPal sandbox wiring: idempotent retries, token refresh, ORDER_NOT_APPROVED / ALREADY_CAPTURED, dispute evidence</li>
+      <li>One-page approval desk with signed mandate release</li><li>200-request comparison + AG Grid explorer</li>
+      <li>Local HTTP fake of PayPal REST with fault injection; 130+ tests</li><li>Render Blueprint, auto-built demo video</li></ul></div>
+    <div><h2 style="font-size:40px">What's next</h2>
+      <ul><li>Mandates from a real AP2 credential provider</li><li>Webhooks for approvals and dispute updates</li>
+      <li>Package tracking to time the delivery check</li><li>Pilot with a handful of small offices</li></ul></div>
+  </div>
+  <div class="foot"><span>GuardedBuyer</span><span>8</span></div>
+</section>
+
+<section class="s dark">
+  <div style="margin-top:170px"><h1>GuardedBuyer</h1>
+  <p class="muted" style="font-size:30px">Buyer-side agentic commerce on PayPal: approvals become signed mandates, payments are checked twice, shortfalls get claimed.</p>
+  <p style="font-size:24px;margin-top:40px">Run it: <span class="mono">python3 web/server.py</span> → <span class="mono">/approvals?demo=1</span> · <span class="mono">/evaluation</span></p></div>
+  <div class="foot"><span>Open source (MIT) · © 2026 elidot</span><span>All demo data synthetic · no live PayPal hosts</span></div>
+</section>
+</body></html>

@@ -1,0 +1,48 @@
+[title]
+AI agents can now shop and pay on behalf of a business.
+But one line hidden in a supplier listing can hijack them. And when a delivery comes up short, nobody claims the money back.
+
+[architecture]
+Here is the shape of it: the agent proposes, a guardrail layer decides, PayPal moves the money, and every step is hash-chained.
+
+[dashboard]
+This is GuardedBuyer, a buyer-side purchasing agent built on PayPal and AP2 mandates.
+An LLM reads the request and compares supplier quotes. Deterministic code decides whether any money moves.
+
+[desk_blocked]
+An employee asks for two laptops: twenty-two hundred dollars, against fifteen hundred left in the IT budget.
+The agent tries to pay anyway. The payment is refused and logged, because the agent has no approve tool at all.
+The approver sees why it was blocked, the chosen quote, and the exact limits that will be signed.
+
+[desk_release]
+The manager approves with a note, then finance approves.
+Release signs a fresh AP2 Intent Mandate that pins the merchant, item, quantity and maximum amount, and verifies it before PayPal is called.
+
+[paypal]
+Release creates a real order on the PayPal sandbox through Orders v2. That is its sandbox order ID.
+A sandbox buyer would approve it on PayPal. Here, PayPal's sandbox test card stands in for that click.
+The agent reads the order back, checks it against the mandate, and only then captures. The capture ID comes straight from PayPal.
+
+[mismatch]
+Back in the offline emulation, four black toner cartridges are paid for, but only three arrive.
+The agent reconciles the delivery and drafts a PayPal dispute for exactly the missing amount, with a factual message.
+Buyers can't open disputes through the API, so a person files the draft, and the agent tracks it through the Disputes API.
+
+[tamper]
+And if anyone edits a single audit entry, verification breaks at exactly that record.
+
+[red_team]
+Next, a poisoned listing with a fake system notice, and a fully compromised agent that obeys it.
+It tries to approve itself, switch to the attacker's store, and order four hundred units. Every attempt is blocked, and the real order still goes through.
+
+[evaluation]
+We measured this on two hundred synthetic requests, each run three ways.
+Full guardrails stopped ninety-one of ninety-six attack cases. A classic spend policy stopped sixty. Neither blocked a single legitimate purchase.
+The five misses are listed openly, one click away.
+
+[terminal]
+The same client passes a smoke test against the real PayPal sandbox: idempotent create, the not-approved path, capture, and a safe second capture.
+
+[close]
+GuardedBuyer. Let AI do the buying, without handing it the keys.
+

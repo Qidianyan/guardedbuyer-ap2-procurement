@@ -1,0 +1,159 @@
+1
+00:00:00,800 --> 00:00:04,332
+AI agents can now shop and pay on behalf of a business.
+
+2
+00:00:04,702 --> 00:00:09,126
+But one line hidden in a supplier listing can hijack them. And when a delivery
+
+3
+00:00:09,146 --> 00:00:11,690
+comes up short, nobody claims the money back.
+
+4
+00:00:12,910 --> 00:00:18,419
+This is GuardedBuyer, a buyer-side purchasing agent built on PayPal and AP2
+
+5
+00:00:18,439 --> 00:00:19,082
+mandates.
+
+6
+00:00:19,452 --> 00:00:24,288
+An LLM reads the request and compares supplier quotes. Deterministic code
+
+7
+00:00:24,308 --> 00:00:26,416
+decides whether any money moves.
+
+8
+00:00:27,636 --> 00:00:32,400
+An employee asks for two laptops: twenty-two hundred dollars, against fifteen
+
+9
+00:00:32,420 --> 00:00:34,264
+hundred left in the IT budget.
+
+10
+00:00:34,634 --> 00:00:39,402
+The agent tries to pay anyway. The payment is refused and logged, because the
+
+11
+00:00:39,422 --> 00:00:41,454
+agent has no approve tool at all.
+
+12
+00:00:41,824 --> 00:00:46,117
+The approver sees why it was blocked, the chosen quote, and the exact limits
+
+13
+00:00:46,137 --> 00:00:47,252
+that will be signed.
+
+14
+00:00:48,472 --> 00:00:51,860
+The manager approves with a note, then finance approves.
+
+15
+00:00:52,230 --> 00:00:56,767
+Release signs a fresh AP2 Intent Mandate that pins the merchant, item,
+
+16
+00:00:56,787 --> 00:01:01,258
+quantity and maximum amount, and verifies it before PayPal is called.
+
+17
+00:01:02,478 --> 00:01:07,512
+Release creates a real order on the PayPal sandbox through Orders v2. That is
+
+18
+00:01:07,532 --> 00:01:08,890
+its sandbox order ID.
+
+19
+00:01:09,260 --> 00:01:13,773
+A sandbox buyer would approve it on PayPal. Here, PayPal's sandbox test card
+
+20
+00:01:13,793 --> 00:01:15,264
+stands in for that click.
+
+21
+00:01:15,634 --> 00:01:20,131
+The agent reads the order back, checks it against the mandate, and only then
+
+22
+00:01:20,151 --> 00:01:23,222
+captures. The capture ID comes straight from PayPal.
+
+23
+00:01:24,442 --> 00:01:24,502
+Back in the offline emulation, a delivery comes up short: three toner
+
+24
+00:01:24,522 --> 00:01:24,542
+cartridges arrive instead of four.
+
+25
+00:01:24,912 --> 00:01:29,687
+The agent reconciles the delivery and drafts a PayPal dispute for exactly the
+
+26
+00:01:29,707 --> 00:01:32,116
+missing amount, with a factual message.
+
+27
+00:01:32,486 --> 00:01:36,988
+Buyers can't open disputes through the API, so a person files the draft, and
+
+28
+00:01:37,008 --> 00:01:39,666
+the agent tracks it through the Disputes API.
+
+29
+00:01:40,886 --> 00:01:45,451
+Next, a poisoned listing with a fake system notice, and a fully compromised
+
+30
+00:01:45,471 --> 00:01:46,674
+agent that obeys it.
+
+31
+00:01:47,044 --> 00:01:51,382
+It tries to approve itself, switch to the attacker's store, and order four
+
+32
+00:01:51,402 --> 00:01:55,505
+hundred units. Every attempt is blocked, and the real order still goes
+
+33
+00:01:55,525 --> 00:01:55,976
+through.
+
+34
+00:01:57,196 --> 00:02:01,712
+We measured this on two hundred synthetic requests, each run three ways.
+
+35
+00:02:02,082 --> 00:02:06,903
+Full guardrails stopped ninety-one of ninety-six attack cases. A classic spend
+
+36
+00:02:06,923 --> 00:02:11,062
+policy stopped sixty. Neither blocked a single legitimate purchase.
+
+37
+00:02:11,432 --> 00:02:14,532
+The five misses are listed openly, one click away.
+
+38
+00:02:15,752 --> 00:02:20,122
+The same client passes a smoke test against the real PayPal sandbox:
+
+39
+00:02:20,142 --> 00:02:25,092
+idempotent create, the not-approved path, capture, and a safe second capture.
+
+40
+00:02:26,312 --> 00:02:30,564
+GuardedBuyer. Let AI do the buying, without handing it the keys.

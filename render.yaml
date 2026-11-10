@@ -1,0 +1,22 @@
+# One-click Render Blueprint for the GuardedBuyer demo (prepared, not deployed).
+# Runs the offline PayPal Orders v2 / Disputes v1 emulation by default, so judges can click through without keys.
+# To use the real PayPal sandbox, set PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET in the Render dashboard and add --sandbox.
+services:
+  - type: web
+    name: guardedbuyer-demo
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 web/server.py
+    healthCheckPath: /api/state
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: PAYPAL_RETURN_URL
+        sync: false   # e.g. https://<your-service>.onrender.com/paypal/return
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
