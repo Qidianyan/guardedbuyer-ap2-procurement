@@ -5,27 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <title>Evaluation explorer · GuardedBuyer</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23003087'/%3E%3Cpath d='M16 5l8 3.4v6c0 5-3.4 9-8 10.6C11.4 23.4 8 19.4 8 14.4v-6L16 5z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E">
+<meta name="description" content="An AI purchasing agent for small businesses that can only spend inside a signed AP2 mandate: company policy, human approvals, PayPal Orders v2 checkout, delivery checks and PayPal disputes, all in a hash-chained audit log.">
+<meta name="theme-color" content="#003087">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GuardedBuyer">
+<meta property="og:title" content="Evaluation explorer · GuardedBuyer">
+<meta property="og:description" content="An AI purchasing agent for small businesses that can only spend inside a signed AP2 mandate: company policy, human approvals, PayPal Orders v2 checkout, delivery checks and PayPal disputes, all in a hash-chained audit log.">
+<meta property="og:image" content="https://raw.githubusercontent.com/Qidianyan/guardedbuyer-ap2-procurement/main/web/static/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GuardedBuyer: AP2-guarded procurement on PayPal. 91 of 96 attack cases stopped, 0 of 74 normal requests wrongly blocked, 30 of 30 delivery mismatches claimed.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
 <link rel="stylesheet" href="/static/style.css">
 <link rel="stylesheet" href="/static/approvals.css">
 <link rel="stylesheet" href="/static/evaluation.css">
 </head>
 <body class="desk">
+<a class="skip-link" href="#main">Skip to the results</a>
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
-      <div class="brand-mark" aria-hidden="true"><svg class="icon"><use href="/static/icons/lucide-sprite.svg#lucide-scale"></use></svg></div>
-      <div><div class="brand-name">GuardedBuyer · Evaluation explorer</div>
+      <div class="brand-mark" aria-hidden="true"><svg class="icon"><use href="/static/icons/lucide-sprite.svg#lucide-shield-check"></use></svg></div>
+      <div><div class="brand-name">GuardedBuyer</div>
         <div class="brand-sub">200 synthetic purchase requests, each run with no guardrails, a spend policy, and full guardrails.</div></div>
     </div>
+    <nav class="app-nav" aria-label="Pages">
+      <a href="/"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-layout-dashboard"></use></svg><span>Dashboard</span></a>
+      <a href="/approvals?demo=1"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-inbox"></use></svg><span>Approval desk</span></a>
+      <a href="/evaluation" aria-current="page"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-scale"></use></svg><span>Evaluation</span></a>
+    </nav>
     <div class="status-chips">
       <span class="chip"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-hash"></use></svg><span id="seed-chip">Seed</span></span>
-      <a class="btn btn-ghost btn-sm" href="/approvals"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-inbox"></use></svg>Approval desk</a>
-      <a class="btn btn-ghost btn-sm" href="/"><svg class="icon" aria-hidden="true"><use href="/static/icons/lucide-sprite.svg#lucide-arrow-right"></use></svg>Dashboard</a>
     </div>
   </div>
 </header>
-<main class="eval">
+<main class="eval" id="main" tabindex="-1">
   <section class="eval-cards" id="cards" aria-label="Summary by configuration"></section>
   <section class="panel eval-grid-panel">
     <div class="eval-toolbar">
@@ -40,7 +56,7 @@
       <input class="eval-search" id="search" type="search" placeholder="Search id, task, listing" aria-label="Search requests">
     </div>
     <div id="grid" class="eval-grid" role="region" aria-label="Case table"></div>
-    <p class="eval-foot">All requests are synthetic (metrics/cases.py, profile 200). Table built with AG Grid Community (MIT). Numbers come from metrics/results_200.json; re-run <code>python3 metrics/run_metrics.py --cases metrics/cases_200.json</code> to regenerate.</p>
+    <p class="eval-foot">All requests are synthetic (metrics/cases.py, profile 200). Table built with AG Grid Community (MIT). Numbers come from metrics/results_200.json; re-run <code>python3 -m metrics.run_metrics --cases metrics/cases_200.json --out metrics/results_200.json</code> to regenerate.</p>
   </section>
 </main>
 <script src="/static/vendor/ag-grid/ag-grid-community.min.js"></script>

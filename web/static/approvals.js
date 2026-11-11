@@ -32,7 +32,10 @@
     return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + (cur ? " " + cur : "");
   }
   function short(x, n) { x = String(x || ""); return x.length > n ? x.slice(0, n) + "…" : x; }
-  function time(ts) { return ts ? String(ts).replace("T", " ").replace("Z", " UTC") : ""; }
+  function time(ts) {
+    if (!ts) return "";
+    return String(ts).replace("T", " ").replace(/\.\d+/, "").replace(/(Z|\+00:00)$/, " UTC");
+  }
   function toast(msg, bad) {
     var t = document.getElementById("toast");
     t.textContent = msg; t.className = "toast" + (bad ? " bad" : ""); t.hidden = false;
@@ -108,7 +111,18 @@
   function renderDetail() {
     var main = document.getElementById("detail"); main.textContent = "";
     var it = state.items.filter(function (x) { return x.request_id === selected; })[0];
-    if (!it) { main.appendChild(h("div", { class: "panel" }, [h("p", { class: "muted", text: "Select a request from the queue." })])); return; }
+    if (!it) {
+      var empty = !state.items.length;
+      main.appendChild(h("div", { class: "panel desk-empty" }, [
+        icon(empty ? "inbox" : "list-checks", "desk-empty-icon"),
+        h("h2", { text: empty ? "Nothing is waiting for approval" : "Select a request from the queue" }),
+        h("p", { class: "muted", text: empty
+          ? "When the agent asks to spend more than policy allows, the request stops here until a manager (and finance, above $2,000 or over budget) signs."
+          : "Pick a request on the left to see why it was blocked and who must sign." }),
+        empty ? h("button", { type: "button", class: "btn btn-primary btn-sm", onclick: loadDemo },
+                  [icon("play"), "Load the over-budget laptop request"]) : null]));
+      return;
+    }
     var r = it.request, s = statusInfo(it);
     // (a) banner
     main.appendChild(h("div", { class: "banner banner-" + s.cls, role: "status" }, [icon(s.icon), h("div", {}, [
@@ -232,7 +246,18 @@
       if (!selected || !state.items.some(function (x) { return x.request_id === selected; }))
         selected = state.items.length ? state.items[0].request_id : null;
       render();
-    }).catch(function (e) { toast("Could not load: " + e.message, true); });
+      document.body.dataset.ready = "1";
+    }).catch(function (e) {
+      toast("Could not load: " + e.message, true);
+      var main = document.getElementById("detail");
+      if (main && !state) {
+        main.textContent = "";
+        main.appendChild(h("div", { class: "banner banner-bad", role: "alert" }, [icon("triangle-alert"), h("div", {}, [
+          h("h1", { text: "Could not reach the demo server" }),
+          h("p", { text: "Start it with: python3 web/server.py (or make demo), then reload this page." })])]));
+      }
+      document.body.dataset.ready = "1";
+    });
   }
   function guard(p) { if (busy) return; busy = true; p().finally(function () { busy = false; }); }
   function decideNow(it, role, decision, note) {

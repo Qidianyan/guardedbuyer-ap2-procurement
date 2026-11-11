@@ -21,6 +21,9 @@ class Decision:
     needs_approval_from: list = field(default_factory=list)
     reasons: list = field(default_factory=list)
 
+def _usd(v) -> str:
+    return f"${float(v):,.2f}"
+
 @dataclass
 class Policy:
     department_budgets: dict            # dept -> remaining budget
@@ -37,15 +40,15 @@ class Policy:
         if req.merchant in self.blocked_merchants:
             return Decision(False, [], [f"merchant '{req.merchant}' blocked"])
         if req.total > self.per_order_hard_cap:
-            return Decision(False, [], [f"total {req.total} exceeds hard cap {self.per_order_hard_cap}"])
+            return Decision(False, [], [f"total {_usd(req.total)} exceeds the per-order hard cap of {_usd(self.per_order_hard_cap)}"])
         budget = self.department_budgets.get(req.department, 0.0)
         if req.total > budget:
-            reasons.append(f"total {req.total} exceeds {req.department} remaining budget {budget}")
+            reasons.append(f"total {_usd(req.total)} exceeds the {req.department.upper()} department's remaining budget of {_usd(budget)}")
             approvers.append("finance")
         for threshold, approver in self.approval_chain:
             if req.total > threshold and approver not in approvers:
                 approvers.append(approver)
-                reasons.append(f"total {req.total} > {threshold} requires {approver}")
+                reasons.append(f"total {_usd(req.total)} is above {_usd(threshold)}, so {approver} approval is required")
         order = [a for _, a in self.approval_chain]
         approvers.sort(key=lambda a: order.index(a) if a in order else 99)
         return Decision(not approvers, approvers, reasons or ["within policy"])

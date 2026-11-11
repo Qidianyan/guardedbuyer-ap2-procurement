@@ -1,11 +1,36 @@
 # GuardedBuyer: AP2-Guarded Procurement Agent for Small Businesses (PayPal)
 
-A **buyer-side** purchasing agent for small businesses. An employee asks for something in plain English; an LLM agent
-finds the item, compares supplier quotes and asks to buy it. Deterministic guardrails decide whether it may: company
-policy (budgets, categories, approval chain), human approvals, and a signed **AP2 Intent Mandate** that bounds merchant,
-SKU, quantity, amount and expiry. Payment runs through **PayPal Orders v2**; the delivery is reconciled, and a short or
-wrong delivery produces a **PayPal dispute** (Disputes v1). Every step lands in a hash-chained audit log, so blocked
-attempts, including prompt-injection attacks, can be checked later.
+**An AI purchasing agent that pays with PayPal but can only spend what a human signed for.** An employee asks for
+something in plain English; an LLM agent finds the item, compares supplier quotes and asks to buy it. Deterministic
+guardrails decide whether it may: company policy, named human approvers, and a signed **AP2 Intent Mandate** that pins
+merchant, SKU, quantity, amount and expiry. Payment runs through **PayPal Orders v2**; a short or wrong delivery becomes
+a drafted **PayPal dispute** (Disputes v1). Every step, including every blocked attempt, lands in a hash-chained audit log.
+
+![Tour: dashboard, approval desk (blocked, released, PayPal checkout, paid), dispute, 200-case evaluation](docs/demo_tour.gif)
+
+| On 200 synthetic purchase requests | No guardrails | Policy only | **Full guardrails (ours)** |
+|---|---|---|---|
+| Attack cases stopped | 0/96 | 60/96 | **91/96 (94.8%)** |
+| Normal requests wrongly blocked | 0/74 | 0/74 | **0/74** |
+| Delivery mismatches claimed | 0/30 | 0/30 | **30/30** |
+
+Seed 20261110, scripted worst-case agent; method and caveats in [`docs/comparison_200.md`](docs/comparison_200.md).
+Demo video (2:52): `<YOUTUBE_URL>`.
+
+## Run it in 60 seconds
+Python 3.10+, no accounts or keys (offline emulation of PayPal Orders v2 / Disputes v1, deterministic LLM fallbacks).
+```bash
+git clone https://github.com/Qidianyan/guardedbuyer-ap2-procurement && cd guardedbuyer-ap2-procurement
+bash scripts/demo.sh          # or: make demo  (installs `cryptography` if missing, starts http://127.0.0.1:8000)
+```
+Then follow the **Start here** card on the dashboard:
+1. `http://127.0.0.1:8000/`: **Replay all four** stories (normal purchase, over budget, short delivery → dispute, prompt injection).
+2. `http://127.0.0.1:8000/approvals?demo=1`: approve the blocked $2,200 laptop request as manager and finance, release
+   the signed mandate, pay at the (clearly labelled, emulated) PayPal checkout and watch the capture.
+3. `http://127.0.0.1:8000/evaluation`: every one of the 200 cases × 3 configurations in an **AG Grid** table.
+
+Tests: `python3 -m pytest -q` (or `make test`; `make test-fast` for the guardrail + UI checks).
+Real PayPal sandbox: see [Real sandbox](#run) below and [`docs/sandbox.md`](docs/sandbox.md).
 
 > **Status (honest, 2026-11-10):** verified on the **real PayPal sandbox**. Create, read-back, the not-approved
 > path, buyer approval (PayPal sandbox test card), capture and a safe second capture all ran there, and so did an
@@ -15,11 +40,28 @@ attempts, including prompt-injection attacks, can be checked later.
 > (IDs start with `MOCK`), so judges need no keys. The LLM part is real (any OpenAI-compatible endpoint) and has
 > deterministic offline fallbacks. All merchants, prices and people are synthetic.
 
-**Try it in one minute:** `pip install -r requirements.txt && python3 web/server.py`, then open
-`http://127.0.0.1:8000/approvals?demo=1` (approval desk), `/evaluation` (200-case explorer built with **AG Grid**)
-and `/` (dashboard). Demo video: `<YOUTUBE_URL>`.
-
-![Dashboard after replaying all four scenarios](docs/screenshots/01_overview_replay_all.png)
+## How it works
+```mermaid
+flowchart LR
+  E["Employee request<br/>(plain English)"] --> L["LLM agent<br/>5 narrow tools"]
+  S["Supplier listings<br/>(untrusted text)"] -. fenced + flagged .-> L
+  L -->|submit_purchase| G["Scope guard +<br/>quarantine"]
+  G --> P["Policy engine<br/>budgets, categories, hard cap"]
+  P -->|over limit| H["Approval desk<br/>manager / finance"]
+  P -->|within policy| M
+  H -->|release| M["AP2 Intent Mandate<br/>Ed25519-signed"]
+  M -->|verify| O["PayPal Orders v2<br/>create → buyer approval → capture"]
+  O -->|read-back re-checked<br/>against mandate| R["Receiving check"]
+  R -->|short / wrong SKU| D["PayPal dispute draft<br/>Disputes v1 tracking"]
+  A[("Hash-chained<br/>audit log")]
+  G -.-> A
+  P -.-> A
+  H -.-> A
+  O -.-> A
+  D -.-> A
+```
+The model can search, read quotes, **ask** to buy and **ask** to pay. It cannot approve, change policy, set a price,
+choose the charge amount or mint a mandate (details in [Security model](#security-model-what-the-llm-can-and-cannot-do)).
 
 ## Significant updates during submission period (Nov 2026)
 This project existed before the submission period. Changes made during it (Nov 10–12, 2026), all in this repository's
@@ -49,6 +91,11 @@ git history:
    third-party music), Devpost text
    (`materials/devpost_submission.md`), pitch deck (`materials/pitch_deck.pdf`), recon (`docs/RECON.md`) and the
    acceptance checklist (`docs/CHAMPION_CHECKLIST.md`).
+7. **Product polish (Nov 11).** One navigation bar across dashboard, approval desk and evaluation; a "Start here" card
+   for first-time visitors; empty, error and not-found states; Lucide icons everywhere (no text glyphs); readable policy
+   reasons ("total $2,200.00 exceeds the IT department's remaining budget of $1,500.00"); share metadata and favicon;
+   `bash scripts/demo.sh` / `make demo`; 24 new tests on mandate verification, the scope guard, receiving → dispute
+   (and the buyer-side draft path), audit tamper detection and the page shell.
 
 ## Results on a synthetic test set
 200 synthetic purchase requests (74 normal, 48 over-authority, 48 prompt injection, 30 delivery mismatch; seed 20261110),
@@ -69,15 +116,7 @@ requested item from the attacker's own store. See [`docs/failure_cases.md`](docs
 PayPal's agent products (Agent Ready, Store Sync) serve **merchants** who want to get paid by agents. This project is
 the other side: a **buyer's** controls over its own agent: authorize, execute, reconcile, recover.
 
-## Architecture
-```
-employee text ─► LLM agent (tool calls) ─► guarded tools ─► ProcurementAgent (deterministic)
-                     │                        │                 ├─ Policy engine + human ApprovalBook
-                     │ untrusted supplier     │ scope guard     ├─ AP2 IntentMandate issue/verify (Ed25519)
-                     │ text is fenced/flagged │ quarantine      ├─ PayPal adapter: create ─► buyer approve ─► capture
-                     ▼                        ▼                 │   ─► read-back check ─► receive ─► dispute
-                hash-chained audit log ◄──────────────────────────┘
-```
+## Modules
 | Module | Role |
 |---|---|
 | `procure/llm.py` | Stdlib OpenAI-compatible client (chat, tool calls, JSON). Config from env / `LLM_ENV_FILE` / `.env`. Backs off on HTTP 429. |
@@ -130,7 +169,8 @@ before approval returns 422 `ORDER_NOT_APPROVED`, which surfaces as `BuyerApprov
 **Buyer approval (sandbox design).** The agent stops at `awaiting_buyer_approval` and records the `approve_url`. The
 company's PayPal account holder opens it, signs in with the **sandbox personal (buyer) account**, and approves. PayPal
 redirects to `return_url?token=<order id>`; that handler calls `ProcurementAgent.complete_payment(ticket)` → capture.
-The return handler is part of the next phase (web UI). In mock mode `sandbox_buyer_approve()` stands in for that click.
+The web app implements that handler at `/paypal/return`. In mock mode the emulated checkout page (or
+`sandbox_buyer_approve()`) stands in for the buyer's click; in sandbox mode PayPal's sandbox test card can.
 
 **Disputes v1.** PayPal's public Disputes API has endpoints to list/show/act on disputes (e.g. `accept-claim`,
 `send-message`, sandbox-only `adjudicate`) but **no endpoint for a buyer to create one**. So, in the sandbox, the
@@ -195,13 +235,13 @@ Materials: [`docs/devpost.md`](docs/devpost.md), [`docs/video_script.md`](docs/v
 
 The audit log is written to `out/audit_log.jsonl`. Keys never belong in the repo: `.env`, `*.env` and `.secrets` are git-ignored.
 
-Icons in the approval desk: [Lucide](https://lucide.dev) (ISC license, `web/static/icons/LICENSE-lucide.txt`).
+Icons on all pages: [Lucide](https://lucide.dev) (ISC license, `web/static/icons/LICENSE-lucide.txt`).
 Evaluation table: [AG Grid Community](https://www.ag-grid.com) v36.3.0 (MIT, `web/static/vendor/ag-grid/LICENSE.txt`).
 
 ## Known limitations
-- The real PayPal sandbox has not been exercised yet (credentials pending). The client is tested over HTTP against a
-  local fake built from the official OpenAPI specs, but real sandbox behaviour (e.g. exact status codes, dispute
-  timelines, which account can list a buyer's dispute) may differ; open points are listed in `docs/sandbox.md`.
+- Orders v2 create / read-back / capture ran on the real PayPal sandbox (Nov 10, 2026), with buyer approval given by
+  PayPal's sandbox test card rather than a sandbox Personal login. Buyer-side dispute filing and dispute timelines were
+  not exercised on the sandbox (there is no buyer create endpoint); open points are listed in `docs/sandbox.md`.
 - The injection detector is regex-based and easy to evade. It is a signal; the boundary is layers 1–7 above.
 - The scope guard relies on the deterministic parser; if that parser cannot read a request, only policy, approvals and
   the mandate apply.

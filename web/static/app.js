@@ -151,8 +151,9 @@
     );
   }
 
-  function tag(text, tone = "slate") {
-    return el("span", { class: "tag tag-" + tone, text });
+  function tag(text, tone = "slate", iconName = null) {
+    if (!iconName) return el("span", { class: "tag tag-" + tone, text });
+    return el("span", { class: "tag tag-" + tone + " tag-with-icon" }, icon(iconName, "icon tag-icon"), text);
   }
 
   function sourceBadge(source) {
@@ -583,8 +584,8 @@
         budgetGroup.appendChild(el("div", { class: "budget-row" },
           el("span", { class: "budget-dept" }, el("span", { class: "dept-dot" }), dept),
           el("span", { class: "budget-amount" + (Number.isFinite(remaining) && remaining < 0 ? " negative" : "") },
-            fmtMoney(amount),
-            el("small", { text: "remaining" })
+            Number.isFinite(remaining) && remaining < 0 ? fmtMoney(-remaining) : fmtMoney(amount),
+            el("small", { text: Number.isFinite(remaining) && remaining < 0 ? "over budget" : "remaining" })
           )
         ));
       }
@@ -653,6 +654,10 @@
     return group;
   }
 
+  function startDismissed() {
+    try { return window.localStorage.getItem("gb-start-dismissed") === "1"; } catch (_) { return false; }
+  }
+
   function renderRequests() {
     const host = $("#requests-list");
     const count = $("#requests-count");
@@ -666,6 +671,8 @@
         ? list.length + (list.length === 1 ? " request" : " requests") + " · newest first · click to inspect"
         : "No requests yet";
     }
+    const start = $("#start-here");
+    if (start) start.hidden = list.length > 0 || startDismissed();
     if (!list.length) {
       host.appendChild(emptyState("receipt", "No requests yet",
         "Ask the agent for a purchase or replay a scenario to populate the demo."));
@@ -782,7 +789,8 @@
         title: STEP_LABELS[index] + ": " + step.state,
         "aria-current": current ? "step" : null,
       },
-        el("span", { class: "step-dot", text: step.state === "done" ? "✓" : step.state === "error" ? "!" : String(index + 1) }),
+        step.state === "done" ? el("span", { class: "step-dot" }, icon("check", "icon step-check"))
+          : el("span", { class: "step-dot", text: step.state === "error" ? "!" : String(index + 1) }),
         el("span", { class: "step-label", text: STEP_LABELS[index] })
       ));
     });
@@ -1055,14 +1063,14 @@
 
       const tags = [];
       if (isChosen) tags.push(tag("chosen", "blue"));
-      if (flags.length) tags.push(tag("⚠ prompt injection", "red"));
+      if (flags.length) tags.push(tag("Prompt injection", "red", "alert"));
 
       const reasons = [];
       if (flags.length) reasons.push("Possible prompt injection: " + flags.join(", "));
       if (Number.isFinite(rating) && rating < 4.0) reasons.push("Rating " + rating.toFixed(1) + " < 4.0");
 
       const eligibilityCell = el("td", {},
-        flags.length ? tag("⚠ prompt injection", "red")
+        flags.length ? tag("Prompt injection", "red", "alert")
           : eligible ? tag("Eligible", "green") : tag("Excluded", "slate"),
         reasons.length ? el("span", { class: "exclusion-reason", text: reasons.join("; ") }) : null
       );
@@ -1078,7 +1086,7 @@
         el("td", { text: (quote.lead_time_days === null || quote.lead_time_days === undefined) ? "—" : quote.lead_time_days + " days" }),
         el("td", { class: "rating-cell" },
           Number.isFinite(rating) ? rating.toFixed(1) : "—",
-          Number.isFinite(rating) ? el("span", { class: "star", text: " ★" }) : null
+          Number.isFinite(rating) ? icon("star", "icon star") : null
         ),
         eligibilityCell
       ));
@@ -1296,7 +1304,7 @@
         el("code", { text: payload.mandate_id || "—" }),
         copyButton(payload.mandate_id || "", "Copy ID")
       ),
-      verified ? tag("Verified ✓", "green") : tag("Unverified", "red")
+      verified ? tag("Verified", "green", "check-circle") : tag("Unverified", "red")
     ));
 
     body.push(el("div", { class: "intent-grid" },
@@ -1336,7 +1344,7 @@
     return sectionCard({
       num: 5, id: "mandate", title: "AP2 Intent Mandate",
       sub: "The signed intent the agent must stay inside when paying.",
-      actions: verified ? tag("Verified ✓", "green") : tag("Unverified", "red"),
+      actions: verified ? tag("Verified", "green", "check-circle") : tag("Unverified", "red"),
       body,
     });
   }
@@ -1479,7 +1487,7 @@
           "Open the simulated PayPal checkout in this tab. After approval, PayPal redirects to /paypal/return and the agent captures the payment."
         ),
         el("a", { class: "btn btn-paypal", href: ticket.approve_url },
-          "Open PayPal approval →",
+          "Open PayPal approval",
           icon("external")
         )
       ));
@@ -1856,8 +1864,8 @@
       box.appendChild(el("div", { class: "tq-head" },
         el("span", { class: "tq-merchant", text: quote.merchant || "—" }),
         el("span", { class: "tq-price", text: fmtMoney(quote.unit_price, quote.currency || "USD") }),
-        el("span", { class: "tq-meta", text: (Number.isFinite(rating) ? rating.toFixed(1) + " ★" : "—") + " · " + (quote.lead_time_days === undefined ? "—" : quote.lead_time_days + " days") }),
-        flagged ? tag("⚠ prompt injection", "red") : null
+        el("span", { class: "tq-meta", text: (Number.isFinite(rating) ? rating.toFixed(1) + " / 5" : "—") + " · " + (quote.lead_time_days === undefined ? "—" : quote.lead_time_days + " days") }),
+        flagged ? tag("Prompt injection", "red", "alert") : null
       ));
       box.appendChild(el("div", { class: "tq-listing", text: stripUntrusted(quote.listing) }));
       wrap.appendChild(box);
@@ -2390,6 +2398,15 @@
 
     const replayAll = $("#replay-all");
     if (replayAll) replayAll.addEventListener("click", () => handleReplay("all", replayAll, true));
+
+    const startReplay = $("#start-replay");
+    if (startReplay) startReplay.addEventListener("click", () => handleReplay("all", startReplay, true));
+    const startDismiss = $("#start-dismiss");
+    if (startDismiss) startDismiss.addEventListener("click", () => {
+      try { window.localStorage.setItem("gb-start-dismissed", "1"); } catch (_) { /* private mode */ }
+      const start = $("#start-here");
+      if (start) start.hidden = true;
+    });
 
     const reset = $("#reset-btn");
     if (reset) reset.addEventListener("click", () => handleReset(reset));

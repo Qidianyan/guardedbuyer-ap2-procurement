@@ -1,8 +1,5 @@
 /* Approval desk. Builds on the tokens in style.css. Icons: Lucide (ISC), web/static/icons/. */
 .desk { background: var(--bg); }
-.skip-link { position: absolute; left: 12px; top: -48px; z-index: 100; background: var(--blue-deep); color: #fff;
-  padding: 8px 14px; border-radius: 8px; }
-.skip-link:focus { top: 10px; }
 .desk-layout { max-width: 1440px; margin: 0 auto; padding: 22px 24px 60px; display: grid;
   grid-template-columns: 300px minmax(0, 1fr); gap: 22px; align-items: start; }
 .queue { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px;
@@ -88,3 +85,8 @@ tr.ev-paypal td:nth-child(3), tr.ev-mandate td:nth-child(3) { color: var(--blue-
   .topbar-inner { flex-wrap: wrap; padding: 10px 12px; }
 }
 .toast[hidden] { display: none !important; }
+.desk-empty { display: grid; justify-items: start; gap: 8px; padding: 28px 26px; }
+.desk-empty h2 { margin: 0; font-size: 16px; }
+.desk-empty p { max-width: 560px; }
+.desk-empty-icon { width: 28px; height: 28px; color: var(--blue); }
+.queue-item .q-top { flex-wrap: wrap; align-items: center; row-gap: 4px; }

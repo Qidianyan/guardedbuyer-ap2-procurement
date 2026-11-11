@@ -12,6 +12,10 @@ import urllib.request
 
 import websockets
 
+FULL_PAGE = "--full" in sys.argv
+if FULL_PAGE:
+    sys.argv.remove("--full")
+
 
 async def cdp(url, out, width, height):
     profile = tempfile.mkdtemp(prefix="gb-chrome-")
@@ -96,6 +100,13 @@ async def cdp(url, out, width, height):
                 "expression": "JSON.stringify({title: document.title, ready: document.body.dataset.ready, scrollY: window.scrollY, sh: document.body.scrollHeight, w: innerWidth, h: innerHeight})",
                 "returnByValue": True,
             })
+            if FULL_PAGE:
+                full_h = await send("Runtime.evaluate", {"expression": "Math.ceil(document.documentElement.scrollHeight)", "returnByValue": True})
+                await send("Emulation.setDeviceMetricsOverride", {
+                    "width": width, "height": int(full_h.get("result", {}).get("value") or height),
+                    "deviceScaleFactor": 1, "mobile": False,
+                })
+                await asyncio.sleep(0.4)
             shot = await send("Page.captureScreenshot", {"format": "png", "fromSurface": True})
             with open(out, "wb") as f:
                 f.write(base64.b64decode(shot["data"]))

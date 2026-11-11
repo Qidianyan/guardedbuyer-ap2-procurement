@@ -88,7 +88,7 @@ class ApprovalDeskTest(unittest.TestCase):
         rid = self.demo(); it = self.item(rid)
         self.assertEqual(it["status"], "pending_approval")
         reasons = " ".join(it["decision"]["reasons"])
-        self.assertIn("exceeds it remaining budget", reasons)
+        self.assertIn("exceeds the IT department's remaining budget of $1,500.00", reasons)
         self.assertGreater(it["budget"]["overage"], 0)
         self.assertTrue(any(b["event"] == "execution_refused" for b in it["blocked_attempts"]))
         self.assertEqual(it["mandate_preview"]["x_constraints"]["max_amount"]["value"], it["request"]["total"])

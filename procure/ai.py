@@ -204,7 +204,7 @@ def _offline_recommend(eligible, excluded):
     )
     count = len(eligible)
     reason = (
-        f"lowest price ${_as_float(best.get('unit_price'), 0.0):.2f} among {count} "
+        f"lowest price ${_as_float(best.get('unit_price'), 0.0):,.2f} among {count} "
         f"eligible quote{'s' if count != 1 else ''} (rating >= 4.0); "
         + _excluded_note(excluded)
     )

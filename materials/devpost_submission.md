@@ -2,7 +2,7 @@
 
 > Copy each block into the matching field of "Enter a Submission" on paypalaihackathon.devpost.com.
 > Every number below comes from files in this repo (`docs/comparison_200.md`, `docs/sandbox.md`). Keep them in sync.
-> Placeholders that only the team can fill: `<REPO_URL>`, `<YOUTUBE_URL>`.
+> Placeholder that only the team can fill: `<YOUTUBE_URL>`.
 
 ---
 
@@ -121,7 +121,7 @@ The project existed before the hackathon as an offline prototype. During the sub
 ## Testing instructions for judges
 No account is needed for the default mode.
 ```bash
-git clone <REPO_URL> && cd guardedbuyer
+git clone https://github.com/Qidianyan/guardedbuyer-ap2-procurement && cd guardedbuyer-ap2-procurement
 python3 -m pip install -r requirements.txt      # one dependency: cryptography
 python3 web/server.py --port 8000               # offline PayPal emulation, no keys
 # open http://127.0.0.1:8000/approvals?demo=1   (approval desk)
@@ -139,5 +139,5 @@ python3 -m pytest -q                            # full test suite
 All demo data is synthetic. No live PayPal hosts are ever contacted.
 
 ## Links
-- Repository: `<REPO_URL>` (MIT licence, © 2026 elidot)
+- Repository: `https://github.com/Qidianyan/guardedbuyer-ap2-procurement` (MIT licence, © 2026 elidot)
 - Video: `<YOUTUBE_URL>`

@@ -343,8 +343,8 @@ DEMO = None
 
 def _page(title, body):
     return f"""<!doctype html><html><head><meta charset="utf-8"><title>{escape(title)}</title>
-<meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/static/paypal_pages.css">
-</head><body>{body}</body></html>"""
+<meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/static/favicon.svg"><link rel="stylesheet" href="/static/paypal_pages.css">
+</head><body data-ready="1">{body}</body></html>"""
 
 class Handler(BaseHTTPRequestHandler):
     server_version = "ProcureDemo/1.0"
@@ -377,6 +377,7 @@ class Handler(BaseHTTPRequestHandler):
             if u.path in ("/evaluation", "/evaluation.html"): return self._static("evaluation.html")
             if u.path == "/api/evaluation": return self._send(200, evaluation_data())
             if u.path.startswith("/static/"): return self._static(u.path[len("/static/"):])
+            if u.path == "/favicon.ico": return self._static("favicon.svg")
             if u.path == "/api/state": return self._send(200, DEMO.state())
             if u.path == "/api/audit/verify": return self._send(200, DEMO.verify())
             if u.path == "/api/audit/tamper-check":
@@ -391,6 +392,11 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, _page("Payment cancelled", f"""<main class="pp-card"><h1>Payment cancelled</h1>
 <p>The buyer cancelled PayPal order <code>{escape(q.get('token', ''))}</code>. No money moved.</p>
 <a class="btn" href="/">Back to dashboard</a></main>"""), "text/html")
+            if not u.path.startswith(("/api/", "/static/")):
+                return self._send(404, _page("Page not found", f"""<main class="pp-card"><h1>Page not found</h1>
+<p>There is no page at <code>{escape(u.path)}</code>. Try the dashboard, the approval desk or the evaluation explorer.</p>
+<a class="btn" href="/">Dashboard</a> <a class="btn ghost" href="/approvals?demo=1">Approval desk</a>
+<a class="btn ghost" href="/evaluation">Evaluation</a></main>"""), "text/html")
             return self._send(404, {"error": "not found"})
         except Exception as e:
             return self._send(500, {"error": f"{type(e).__name__}: {e}"})
@@ -433,7 +439,7 @@ class Handler(BaseHTTPRequestHandler):
         path = os.path.normpath(os.path.join(STATIC, name))
         if not path.startswith(STATIC) or not os.path.isfile(path): return self._send(404, {"error": "not found"})
         ctype = {".html": "text/html", ".js": "application/javascript", ".css": "text/css", ".svg": "image/svg+xml",
-                 ".png": "image/png", ".txt": "text/plain"}.get(os.path.splitext(path)[1], "application/octet-stream")
+                 ".png": "image/png", ".txt": "text/plain", ".ico": "image/x-icon", ".json": "application/json"}.get(os.path.splitext(path)[1], "application/octet-stream")
         with open(path, "rb") as f: return self._send(200, f.read(), ctype)
 
     def _checkout_page(self, token):
@@ -495,7 +501,12 @@ def main(argv=None):
     global DEMO
     os.environ.setdefault("PAYPAL_RETURN_URL", f"http://{a.host}:{a.port}/paypal/return")
     DEMO = Demo(llm, "sandbox" if a.sandbox else ("toolkit" if a.toolkit else "mock"), a.port)
-    print(f"Demo on http://{a.host}:{a.port}  (PayPal: {DEMO.a.pp.mode}, LLM: {llm!r})")
+    base = f"http://{'127.0.0.1' if a.host in ('0.0.0.0', '') else a.host}:{a.port}"
+    print(f"GuardedBuyer demo on {base}  (PayPal: {DEMO.a.pp.mode}, LLM: {llm!r})")
+    print(f"  1. Dashboard + replays : {base}/")
+    print(f"  2. Approval desk       : {base}/approvals?demo=1")
+    print(f"  3. 200-case evaluation : {base}/evaluation")
+    print("  Ctrl+C to stop.", flush=True)
     ThreadingHTTPServer((a.host, a.port), Handler).serve_forever()
 
 if __name__ == "__main__":
