@@ -15,7 +15,7 @@ a drafted **PayPal dispute** (Disputes v1). Every step, including every blocked 
 | Delivery mismatches claimed | 0/30 | 0/30 | **30/30** |
 
 Seed 20261110, scripted worst-case agent; method and caveats in [`docs/comparison_200.md`](docs/comparison_200.md).
-Demo video (2:52): `<YOUTUBE_URL>`.
+Demo video (2:52): [https://youtu.be/E7SZ5k9kFbE](https://youtu.be/E7SZ5k9kFbE)
 
 ## Run it in 60 seconds
 Python 3.10+, no accounts or keys (offline emulation of PayPal Orders v2 / Disputes v1, deterministic LLM fallbacks).

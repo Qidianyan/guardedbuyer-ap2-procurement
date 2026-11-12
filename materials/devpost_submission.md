@@ -2,7 +2,7 @@
 
 > Copy each block into the matching field of "Enter a Submission" on paypalaihackathon.devpost.com.
 > Every number below comes from files in this repo (`docs/comparison_200.md`, `docs/sandbox.md`). Keep them in sync.
-> Placeholder that only the team can fill: `<YOUTUBE_URL>`.
+> Demo video (public on YouTube): https://youtu.be/E7SZ5k9kFbE
 
 ---
 
@@ -140,4 +140,4 @@ All demo data is synthetic. No live PayPal hosts are ever contacted.
 
 ## Links
 - Repository: `https://github.com/Qidianyan/guardedbuyer-ap2-procurement` (MIT licence, © 2026 elidot)
-- Video: `<YOUTUBE_URL>`
+- Video: `https://youtu.be/E7SZ5k9kFbE`
